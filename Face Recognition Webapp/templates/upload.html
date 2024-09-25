@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Face Recognition - Upload</title>
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <style>
+      .video-container {
+        float: right;
+        width: 50%;
+      }
+      .upload-container {
+        float: left;
+        width: 45%;
+      }
+      #video-feed {
+        display: none; /* Initially hidden */
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="/">Face Recognition</a>
+      <a class="nav-link" href="/add_face">Add New Face</a>
+      <a class="nav-link" href="/add_remove">Remove Face</a>
+
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+      <div class="upload-container">
+        <h1 class="mt-4">Upload a Face Image</h1>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+          <div class="form-group">
+            <label for="file">Select an image:</label>
+            <input
+              type="file"
+              id="file"
+              name="file"
+              class="form-control-file"
+              onchange="previewImage(event)"
+            />
+          </div>
+          <img
+            id="preview"
+            src=""
+            alt="Image Preview"
+            class="img-fluid"
+            style="display: none; max-width: 300px"
+          />
+          <br />
+          <button type="submit" class="btn btn-primary mt-3">Upload</button>
+        </form>
+      </div>
+
+      <div class="video-container">
+        <h1 class="mt-4">Real-Time Face Recognition</h1>
+        <button
+          id="toggle-button"
+          class="btn btn-success"
+          onclick="toggleVideo()"
+        >
+          Start Video
+        </button>
+        <div id="video-feed">
+          <img
+            id="video-stream"
+            src="{{ url_for('video_feed') }}"
+            alt="Video Stream"
+            class="img-fluid"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+      // Function to show image preview
+      function previewImage(event) {
+        const preview = document.getElementById("preview");
+        preview.src = URL.createObjectURL(event.target.files[0]);
+        preview.style.display = "block"; // Show the image element
+      }
+
+      // Toggle video feed visibility
+      let videoOn = false;
+      function toggleVideo() {
+        const videoFeed = document.getElementById("video-feed");
+        const toggleButton = document.getElementById("toggle-button");
+        const videoStream = document.getElementById("video-stream");
+
+        if (!videoOn) {
+          // Show the video feed and change button text to 'Stop Video'
+          videoFeed.style.display = "block";
+          toggleButton.textContent = "Stop Video";
+          toggleButton.className = "btn btn-danger";
+        } else {
+          // Hide the video feed and change button text to 'Start Video'
+          videoFeed.style.display = "none";
+          toggleButton.textContent = "Start Video";
+          toggleButton.className = "btn btn-success";
+        }
+        videoOn = !videoOn;
+      }
+    </script>
+  </body>
+</html>
